@@ -3,6 +3,7 @@ package com.example.splitwise.ModelTest;
 import com.example.splitwise.Model.Splitwise;
 import com.example.splitwise.Model.User;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,5 +23,4 @@ public class SplitwiseTest {
         Splitwise group = new Splitwise("Group1", members);
         Assertions.assertEquals(members, group.getMembers());
     }
-
 }

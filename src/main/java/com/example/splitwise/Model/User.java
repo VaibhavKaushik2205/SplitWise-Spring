@@ -1,8 +1,12 @@
 package com.example.splitwise.Model;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,17 +25,20 @@ public class User {
 
     @Column
     private String name;
-    @Column
+    @Column(unique = true)
     private String contact;
-    @Column
+    @Column(unique = true)
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-        name = "splitwise_member",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "splitwise_groupID"))
-    private Set<Splitwise> memberInGroups;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_splitwise",
+        joinColumns = {@JoinColumn(name = "users_id")},
+        inverseJoinColumns = {@JoinColumn(name = "splitwise_id")})
+    private Set<Splitwise> groups = new HashSet<>();
+
+    private Map<User, Double> userOwesTo = new HashMap<>();
+
+    private Map<User, Double>
 
     public User() {
     }
@@ -49,6 +56,16 @@ public class User {
         this.email = email;
     }
 
+    public void addOwesTo(User owedUser, Double amountOwed) {
+        if (userOwesTo.containsKey(owedUser)) {
+            Double newAmountOwed = userOwesTo.get(owedUser) + amountOwed;
+            userOwesTo.put(owedUser, newAmountOwed);
+            return;
+        }
+        userOwesTo.put(owedUser, amountOwed);
+
+    }
+`
     public Integer getId() {
         return this.id;
     }

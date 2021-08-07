@@ -1,5 +1,6 @@
 package com.example.splitwise.RepositoryTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.splitwise.Model.Splitwise;
@@ -34,11 +35,8 @@ public class SplitwiseRepositoryTest {
         Splitwise group = splitwiseRepository.save(new Splitwise("Group", members));
         Optional<Splitwise> savedGroup = splitwiseRepository.findById(1);
         assertTrue(savedGroup.isPresent());
+        //assertEquals(2, savedGroup.get().getMembers().size());
     }
 
-    @Test
-    public void expectsToFindSplitWiseGroupByName() {
-        Optional<Splitwise> groupFoundByName = splitwiseRepository.findByNameOfGroup("Group");
-        assertTrue(groupFoundByName.isPresent());
-    }
+
 }
