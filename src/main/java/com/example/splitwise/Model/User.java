@@ -1,10 +1,14 @@
 package com.example.splitwise.Model;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +25,13 @@ public class User {
     private String contact;
     @Column
     private String email;
+
+    @ManyToMany
+    @JoinTable(
+        name = "splitwise_member",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "splitwise_groupID"))
+    private Set<Splitwise> memberInGroups;
 
     public User() {
     }
@@ -39,18 +50,18 @@ public class User {
     }
 
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getContact() {
-        return contact;
+        return this.contact;
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 }
