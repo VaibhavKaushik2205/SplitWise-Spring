@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -21,24 +25,25 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column
     private String name;
     @Column(unique = true)
     private String contact;
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_splitwise",
-        joinColumns = {@JoinColumn(name = "users_id")},
-        inverseJoinColumns = {@JoinColumn(name = "splitwise_id")})
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private Set<Splitwise> groups = new HashSet<>();
 
-    private Map<User, Double> userOwesTo = new HashMap<>();
-
-    private Map<User, Double>
+    @ElementCollection
+    @CollectionTable(name = "users_owed",
+        joinColumns =
+        @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "owedUser_id")
+    @Column(name = "amount")
+    private Map<Integer, Double> userOwesTo = new HashMap<>();
 
     public User() {
     }
@@ -57,15 +62,14 @@ public class User {
     }
 
     public void addOwesTo(User owedUser, Double amountOwed) {
-        if (userOwesTo.containsKey(owedUser)) {
-            Double newAmountOwed = userOwesTo.get(owedUser) + amountOwed;
-            userOwesTo.put(owedUser, newAmountOwed);
+        if (userOwesTo.containsKey(owedUser.getId())) {
+            Double newAmountOwed = userOwesTo.get(owedUser.getId()) + amountOwed;
+            userOwesTo.put(owedUser.getId(), newAmountOwed);
             return;
         }
-        userOwesTo.put(owedUser, amountOwed);
-
+        userOwesTo.put(owedUser.getId(), amountOwed);
     }
-`
+
     public Integer getId() {
         return this.id;
     }
@@ -80,5 +84,21 @@ public class User {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public Set<Integer> getUserOwedTo() {
+        return userOwesTo.keySet();
+    }
+
+    public void addGroup(Splitwise group) {
+        groups.add(group);
+    }
+
+    public void removeGroup(Splitwise group) {
+        groups.remove(group);
+    }
+
+    public Set<Splitwise> getGroups() {
+        return groups;
     }
 }

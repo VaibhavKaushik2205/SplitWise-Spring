@@ -1,4 +1,4 @@
-package com.example.splitwise.Service;
+package com.example.splitwise.Model;
 
 import com.example.splitwise.Exception.InvalidSplitException;
 import com.example.splitwise.Strategy.Methods.PercentageSplit;
@@ -54,6 +54,17 @@ public class ExpenseReport {
             throw new InvalidSplitException("Total sum of split is not equal to 100%." +
                 " Difference: " + Math.abs(100 - splitPercentTotal));
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ExpenseReportSummary{" +
+            "groupId=" + groupId +
+            ", paidBy=" + paidBy +
+            ", totalAmount=" + totalAmount +
+            ", splitStrategy=" + splitStrategy +
+            ", splits=" + splits +
+            '}';
     }
 
     public Integer getGroupId() {
