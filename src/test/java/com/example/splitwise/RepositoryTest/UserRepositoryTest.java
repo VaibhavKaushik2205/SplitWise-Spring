@@ -32,9 +32,22 @@ public class UserRepositoryTest {
 
     @Test
     public void expectsToNotCreateDuplicateUserWithSameContact() {
+        User user1 = userRepository.save(new User("John", "9999999999", "john@123.com"));
         User user2 = null;
         try{
             user2 = userRepository.save(new User("Jill", "9999999999", "jill@123.com"));
+        }
+        catch (Exception ignored){
+        }
+        assertNull(user2);
+    }
+
+    @Test
+    public void expectsToNotCreateDuplicateUserWithSameEmail() {
+        User user1 = userRepository.save(new User("Jill", "9999999999", "abc@123.com"));
+        User user2 = null;
+        try{
+            user2 = userRepository.save(new User("John", "9876543210", "abc@123.com"));
         }
         catch (Exception ignored){
         }
