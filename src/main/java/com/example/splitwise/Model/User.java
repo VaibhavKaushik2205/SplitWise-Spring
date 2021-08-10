@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -37,12 +36,12 @@ public class User {
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private Set<Splitwise> groups = new HashSet<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyColumn(name = "owedUser_id")
+    @Column(name = "amount")
     @CollectionTable(name = "users_owed",
         joinColumns =
         @JoinColumn(name = "user_id"))
-    @MapKeyColumn(name = "owedUser_id")
-    @Column(name = "amount")
     private Map<Integer, Double> userOwesTo = new HashMap<>();
 
     public User() {
