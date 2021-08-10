@@ -62,8 +62,8 @@ public class SplitwiseRepositoryTest {
 
         group.pay(jill, amount, SplitStrategy.FIXED, splits);
 
-        assertEquals(1, jill.getUserOwedTo().size());
-        assertEquals(1, jack.getUserOwedTo().size());
+        User savedJack = userRepository.save(jack);
+        User savedJill = userRepository.save(jill);
 
         Optional<User> user = userRepository.findById(1);
         assertEquals(1, user.get().getUserOwedTo().size());
