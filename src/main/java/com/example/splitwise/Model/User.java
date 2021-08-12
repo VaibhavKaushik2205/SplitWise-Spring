@@ -1,10 +1,10 @@
 package com.example.splitwise.Model;
 
+import com.example.splitwise.Service.PaymentService;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "users")
@@ -85,8 +86,8 @@ public class User {
         return this.email;
     }
 
-    public Set<Integer> getUserOwedTo() {
-        return userOwesTo.keySet();
+    public Map<Integer, Double> getUserOwedTo() {
+        return userOwesTo;
     }
 
     public void addGroup(Splitwise group) {
@@ -99,5 +100,9 @@ public class User {
 
     public Set<Splitwise> getGroups() {
         return groups;
+    }
+
+    public void removeOwesTo(User user) {
+        this.userOwesTo.remove(user.getId());
     }
 }

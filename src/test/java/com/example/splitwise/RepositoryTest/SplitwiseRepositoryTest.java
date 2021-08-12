@@ -7,6 +7,7 @@ import com.example.splitwise.Model.Splitwise;
 import com.example.splitwise.Model.User;
 import com.example.splitwise.Repository.SplitwiseRepository;
 import com.example.splitwise.Repository.UserRepository;
+import com.example.splitwise.Service.PaymentService;
 import com.example.splitwise.Strategy.Methods.FixedSplit;
 import com.example.splitwise.Strategy.Split;
 import com.example.splitwise.Strategy.SplitStrategy;
@@ -27,6 +28,9 @@ public class SplitwiseRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PaymentService service;
 
     @Test
     public void expectsToCreateASplitWiseGroupInDatabase() {
@@ -60,10 +64,7 @@ public class SplitwiseRepositoryTest {
         splits.add(new FixedSplit(jill, 60.));
         splits.add(new FixedSplit(jack, 40.));
 
-        group.pay(jill, amount, SplitStrategy.FIXED, splits);
-
-        User savedJack = userRepository.save(jack);
-        User savedJill = userRepository.save(jill);
+        service.pay(group, jill, amount, SplitStrategy.FIXED, splits);
 
         Optional<User> user = userRepository.findById(1);
         assertEquals(1, user.get().getUserOwedTo().size());

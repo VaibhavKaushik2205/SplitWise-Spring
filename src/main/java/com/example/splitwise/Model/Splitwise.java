@@ -54,18 +54,6 @@ public class Splitwise {
         }
     }
 
-    public void pay(User payee, Double amount, SplitStrategy strategy, List<Split> splits) {
-        ExpenseReport report = new ExpenseReport(this.id, payee.getId(), amount, strategy, splits);
-        report.validate();
-
-        for (Split split : splits) {
-            if (!split.getUser().getId().equals(payee.getId())) {
-                split.getUser().addOwesTo(payee, -1 * split.getAmount());
-                payee.addOwesTo(split.getUser(), split.getAmount());
-            }
-        }
-    }
-
     public void addUser(User user) {
         this.members.add(user);
         user.addGroup(this);
